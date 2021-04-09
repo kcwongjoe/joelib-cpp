@@ -17,6 +17,18 @@
 
 namespace Utils
 {
+
+#ifndef JW_UTILS_IS_NUMERICAL_H
+#define JW_UTILS_IS_NUMERICAL_H
+	/**
+	 * @brief Check whether typename is numerical type
+	 * @tparam T Type to be checked.
+     * @date 2021-04-09
+	*/
+	template <typename T>
+	constexpr bool is_numerical = !std::is_same_v<T, bool> && std::is_arithmetic_v<T>;
+#endif
+
     // ******String******
     std::vector<std::string> splitStr(std::string str, std::string delimiter);
     std::string to_string(double value, int precision);
@@ -103,6 +115,62 @@ namespace Utils
             }
         }
     }
+
+    /**
+	 * @brief Find the index of the closest value in the array
+	 * @tparam T Numerical variable
+	 * @param[in] value Value to search
+	 * @param[in] values The array
+	 * @param[in] sorted (option) Set as true if the array was sorted. Default as false.
+	 * @return Return the index of the closest value in the array. Return -1 if something wrong.
+     * @date 2021-04-09
+	*/
+	template<typename T>
+	int findClosestIndex(T value, std::vector<T> values, bool sorted = false)
+	{
+		// Exception
+		if constexpr (!is_numerical<T>)
+			throw "This funciton only support numerical type.";
+
+		int result = -1;
+		if (sorted)
+		{
+			int low = std::lower_bound(values.begin(), values.end(), value) - values.begin();
+			int distance1 = std::abs(values[low - 1] - value);
+			int distance2 = std::abs(values[low] - value);
+			int distance3 = std::abs(values[low + 1] - value);
+			if (distance1 < distance2 && distance1 < distance3)
+			{
+				result = low - 1;
+			}
+			else if (distance2 < distance1 && distance2 < distance3)
+			{
+				result = low;
+			}
+			else
+			{
+				result = low + 1;
+			}
+		}
+		else
+		{
+			int minDistance = std::abs(values[0] - value);
+			int minIndex = 0;
+			for (int i = 1; i < values.size(); i++)
+			{
+				int distance = std::abs(values[i] - value);
+				if (distance < minDistance)
+				{
+					minIndex = i;
+					minDistance = distance;
+				}
+			}
+
+			result = minIndex;
+		}
+
+		return result;
+	}
 }
 
 

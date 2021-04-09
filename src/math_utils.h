@@ -9,14 +9,17 @@
 constexpr double PI = 3.1415926535897932384626433;
 namespace Utils
 {
+	
+#ifndef JW_UTILS_IS_NUMERICAL_H
+#define JW_UTILS_IS_NUMERICAL_H
 	/**
-	 * @brief Check whether type as numerical type.
-	 * 
-	 * @tparam T Type to be check
-     * @date 2021-03-17
-	 */
+	 * @brief Check whether typename is numerical type
+	 * @tparam T Type to be checked.
+     * @date 2021-04-09
+	*/
 	template <typename T>
 	constexpr bool is_numerical = !std::is_same_v<T, bool> && std::is_arithmetic_v<T>;
+#endif
 
 	/**
 	 * @brief Average
