@@ -7,6 +7,7 @@
 #include <string>
 #include <math_utils.h>
 #include <general_utils.h>
+#include <color_utils.h>
 
 #include <opencv2/opencv.hpp>
 
@@ -25,6 +26,7 @@ namespace OpenCVUtils
 	void saveImage(std::string name, cv::Mat mat);
 	std::string type2str(int type);
 	void acquireRGB(cv::Mat image, std::vector<uchar>* r, std::vector<uchar>* g, std::vector<uchar>* b, bool ignoreBlackColor = true, bool isBGR = true);
+	void acquireHSL(cv::Mat image, std::vector<double>* hue, std::vector<double>* saturation, std::vector<double>* lightness, bool ignoreBlackColor = true, bool isBGR = true);
 
 	// Contours
 	void removeContourTouchBoundary(contours* inputContours, int imageWidth, int imageHeight);

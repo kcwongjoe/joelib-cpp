@@ -100,6 +100,42 @@ namespace OpenCVUtils
 	}
 
 	/**
+	 * @brief Acquire HSL values
+	 * @param[in] image Image
+	 * @param[out] hue Hue. It can be NULL.
+	 * @param[out] saturation Saturation. It can be NULL.
+	 * @param[out] lightness :ightness. It can be NULL.
+	 * @param[in] ignoreBlackColor (Option) Ignore black color? Default as true
+	 * @param[in] isBGR (Option) Is color foramt as BGR? Default as true. Set as false for RGB format.
+     * @date 2021-04-21
+	*/
+	void acquireHSL(cv::Mat image, std::vector<double>* hue, std::vector<double>* saturation, std::vector<double>* lightness, bool ignoreBlackColor, bool isBGR)
+	{
+		std::vector<uchar> redColor;
+		std::vector<uchar> greenColor;
+		std::vector<uchar> blueColor;
+
+		// Get RGB
+		acquireRGB(image, &redColor, &greenColor, &blueColor, ignoreBlackColor, isBGR);
+
+		// Resize
+		if (hue) hue->resize(redColor.size());
+		if (saturation) saturation->resize(redColor.size());
+		if (lightness) lightness->resize(redColor.size());
+
+		// Convert to HSL
+		for (int i = 0; i < redColor.size();i++) {
+			double h;
+			double s;
+			double l;
+			Utils::rgb2hsl(redColor[i], greenColor[i], blueColor[i], &h, &s, &l);
+			if (hue) hue->at(i) = h;
+			if (saturation) saturation->at(i) = s;
+			if (lightness) lightness->at(i) = l;
+		}
+	}
+
+	/**
 	 * @brief Remove contour which touch the image boundary
 	 * @param[in, out] processContours Contour list to be processed
 	 * @param[in] imageWidth Image width
